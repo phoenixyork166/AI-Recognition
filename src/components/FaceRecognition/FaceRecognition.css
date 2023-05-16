@@ -1,0 +1,20 @@
+.bounding-box {
+    position: absolute;
+    box-shadow: 0 0 0 3px #069cfa inset;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.big-box {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.celebrity-name {
+    margin-top: 2vh;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+}
