@@ -59,7 +59,8 @@ class App extends Component {
       celebrity: {},
       celebrityName: '',
       colors: [],
-      valid: false,
+      face_hidden: true,
+      color_hidden: true,
     }
   }
 
@@ -122,7 +123,7 @@ class App extends Component {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
     // DOM manipulation
     // for <img id='...'/> in <FaceRecognition/>
-    const image = document.getElementById('inputimage');
+    const image = document.getElementById('face-image');
     const width = Number(image.width);
     const height = Number(image.height);
     console.log('img width:\n', width, '\nimg height:\n', height)
@@ -163,7 +164,9 @@ class App extends Component {
     // setState imageUrl: this.state.input from InputChange
     this.setState({imageUrl: this.state.input},
       () => console.log('this.state.input:\n', this.state.input));
-    console.log("click Celebrity");
+
+    this.setState({face_hidden: !this.state.face_hidden},
+      () => console.log('this.state.face_hidden:\n', this.state.face_hidden));
 
   // fetch("https://api.clarifai.com/v2/models/general-image-recognition/outputs", returnClarifaiRequestOptions(imageUrl))
     fetch(
@@ -200,7 +203,9 @@ class App extends Component {
     // setState imageUrl: this.state.input from InputChange
     this.setState({imageUrl: this.state.input},
       () => console.log('this.state.input:\n', this.state.input));
-    console.log("click Color");
+    
+    this.setState({color_hidden: !this.state.color_hidden},
+      () => console.log('this.state.color_hidden:\n', this.state.color_hidden));
 
     fetch(
         "https://api.clarifai.com/v2/models/" +
@@ -241,9 +246,10 @@ class App extends Component {
     {console.log('this.state.box: \n', this.state.box)};
     {console.log('this.state.celebrity: \n', this.state.celebrity)};
     {console.log('this.state.colors: \n', this.state.colors)};
+    {console.log('this.state.face_hidden', this.state.face_hidden)};
+    {console.log('this.state.color_hidden', this.state.color_hidden)};
     const { colors } = this.state;
     const colors_array = colors.map(color => color)
-    {console.log('colors_array:\n', colors_array)}
 
     return (
       <div className="App">
@@ -253,15 +259,19 @@ class App extends Component {
           onInputChange={this.onInputChange}
           onCelebrityButton={this.onCelebrityButton}
           onColorButton={this.onColorButton}
+          face_hidden={this.state.face_hidden}
+          color_hidden={this.state.color_hidden}
         />
         <FaceRecognition 
           box={this.state.box} 
           imageUrl={this.state.imageUrl} 
           celebrityName={this.state.celebrity.name}
+          face_hidden={this.state.face_hidden}
         />
         <ColorRecognition
           imageUrl={this.state.imageUrl}
           color_props={colors_array}
+          color_hidden={this.state.color_hidden}
         />
       </div>
     );

@@ -1,27 +1,29 @@
 import React from 'react';
 import './FaceRecognition.css';
-import CelebrityName from './CelebrityName';
 
-const FaceRecognition = ( { imageUrl, box, celebrityName } ) => {
-    return (
+const FaceRecognition = ( { imageUrl, box, celebrityName, face_hidden } ) => {
+
+    return face_hidden ? (
+        <h2></h2>
+        
+    ) : ( 
         <div className="center ma">
-            {/* <CelebrityName celebrityName={celebrityName} /> */}
             <div className='absolute mt2'>
-                <div className='image-container'>
-                   <img 
-                    id='inputimage'
+                <div >
+                   <img
+                    // id='face-image' is used for DOM manipulation
+                    // cannot be edited
+                    id='face-image'
                     src={imageUrl}
                     alt="Image will be displayed"
-                    style={{
-                        marginTop: '5vh',
-                        width: '50vw',
-                        height: '50vh',
-                    }}
+                    // style={{
+                    //     visibility: 'hidden'
+                    // }}
                    /> 
                 </div>
                
                 <div 
-                  className='bounding-box' 
+                  className='bounding-box'
                   style={{
                    top: box.topRow,
                    right: box.rightCol,

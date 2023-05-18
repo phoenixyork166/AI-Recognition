@@ -2,7 +2,13 @@ import React from "react";
 import "./ImageLinkForm.css";
 
 // Passing onInputChange event listener as props to App.js
-const ImageLinkForm = ({ validity_props, onInputChange, onCelebrityButton, onColorButton }) => {
+const ImageLinkForm = ({ 
+  onInputChange, 
+  onCelebrityButton, 
+  onColorButton,
+  face_hidden,
+  color_hidden,
+}) => {
   return (
     <div className="center" id="container">
       <div id="paragraph">
@@ -30,7 +36,6 @@ const ImageLinkForm = ({ validity_props, onInputChange, onCelebrityButton, onCol
           <button
             className="w-30 grow f4 link ph3 pv2 dib white bg-light-purple"
             onClick={onColorButton}
-            disabled={validity_props}
           >
             Detect Color
           </button>

@@ -1,5 +1,7 @@
-.image-container {
-    display: flex;
+#face-image {
+    margin-top: 5vh;
+    width: 50vw;
+    height: 50vh;
 }
 
 .bounding-box {
@@ -11,14 +13,10 @@
     cursor: pointer;
 }
 
-.container {
-    display: flex;
-    flex-flow: row wrap;
-}
-
 .celebrity-name {
     color: #c5e60c;
     margin-top: -5vh;
     font-size: 20px;
     display: flex;
 }
+
