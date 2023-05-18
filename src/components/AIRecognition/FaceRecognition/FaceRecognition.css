@@ -1,3 +1,7 @@
+.image-container {
+    display: flex;
+}
+
 .bounding-box {
     position: absolute;
     box-shadow: 0 0 0 3px #069cfa inset;
@@ -7,14 +11,14 @@
     cursor: pointer;
 }
 
-.big-box {
+.container {
     display: flex;
     flex-flow: row wrap;
 }
 
 .celebrity-name {
-    margin-top: 2vh;
+    color: #c5e60c;
+    margin-top: -5vh;
     font-size: 20px;
     display: flex;
-    flex-direction: row;
 }

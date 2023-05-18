@@ -1,27 +1,26 @@
 import React from 'react';
 import './ColorRecognition.css';
-import ColorName from './ColorName';
+import ColorDetails from './ColorDetails';
 
-const ColorRecognition = ( { imageUrl, eachColor } ) => {
+const ColorRecognition = ( { imageUrl, color_props } ) => {
     return (
-        <div className="center ma">
-            <ColorName eachColor={eachColor} />
-            <div className='absolute mt2' id='big-box'>
+        <div className="center ma" id="color-container">
                <img 
                 id='color-image'
                 src={imageUrl}
-                alt="testing img"
+                alt="Image will be displayed"
                 style={{
                     marginTop: '5vh',
                     width: '50vw',
                     height: '50vh',
                 }}
                 />
-            <div 
-                className='color-box' 
-            />
-                Hi123
-            </div>
+
+                <div id="color-details">
+                    <ColorDetails color_props={color_props} />
+                </div>
+                
+
         </div>
     )
 }

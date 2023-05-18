@@ -5,28 +5,34 @@ import CelebrityName from './CelebrityName';
 const FaceRecognition = ( { imageUrl, box, celebrityName } ) => {
     return (
         <div className="center ma">
-            <CelebrityName celebrityName={celebrityName} />
-            <div className='absolute mt2' id='big-box'>
-               <img 
-                id='inputimage'
-                src={imageUrl}
-                alt="testing img"
-                style={{
-                    marginTop: '5vh',
-                    width: '50vw',
-                    height: '50vh',
-                }}
-                />
-                    <div 
-                        className='bounding-box' 
-                        style={{
-                            top: box.topRow,
-                            right: box.rightCol,
-                            bottom: box.bottomRow,
-                            left: box.leftCol,
-                        }}
-                    />
-                    </div>
+            {/* <CelebrityName celebrityName={celebrityName} /> */}
+            <div className='absolute mt2'>
+                <div className='image-container'>
+                   <img 
+                    id='inputimage'
+                    src={imageUrl}
+                    alt="Image will be displayed"
+                    style={{
+                        marginTop: '5vh',
+                        width: '50vw',
+                        height: '50vh',
+                    }}
+                   /> 
+                </div>
+               
+                <div 
+                  className='bounding-box' 
+                  style={{
+                   top: box.topRow,
+                   right: box.rightCol,
+                   bottom: box.bottomRow,
+                   left: box.leftCol,
+                    }}
+                >
+                  <h3 className="celebrity-name">{celebrityName}</h3>
+                </div>
+            </div>
+            
         </div>
     )
 }

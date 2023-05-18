@@ -1,11 +1,12 @@
-/* .big-box {
-
+#color-container {
+    display: flex;
+    flex-direction: row;
 }
 
-.color-image {
-
+#color-image {
+    top: 0vh;
 }
 
-.color-box {
-
-} */
+.color-details {
+    top: 0vh;
+}

@@ -4,7 +4,7 @@ import "./App.css";
 import Navigation from "./components/Navigation/Navigation";
 import Logo from "./components/Logo/Logo";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
-// import FaceRecognition from "./components/AIRecognition/FaceRecognition/FaceRecognition";
+import FaceRecognition from "./components/AIRecognition/FaceRecognition/FaceRecognition";
 import ColorRecognition from "./components/AIRecognition/ColorRecognition/ColorRecognition";
 
 // const app = new Clarifai.App({
@@ -59,6 +59,7 @@ class App extends Component {
       celebrity: {},
       celebrityName: '',
       colors: [],
+      valid: false,
     }
   }
 
@@ -66,6 +67,15 @@ class App extends Component {
   //   // console.log('2 in componentDidMount() ');
   //   this.findColor(this.state.color)
   // }
+
+  validateImage = (event) => {
+    const const_true = 'true';
+    
+    const fetch_test = window.fetch(event.target.value);
+    console.log('validateImage Input value:\n', event.target.value);
+    console.log('fetch test:', fetch_test);
+    // return const_true;
+  }
 
   findCelebrity = (data) => {
     // We'd like to only get 1 celebrity at a time
@@ -80,15 +90,13 @@ class App extends Component {
 
   }
 
-  findColor = (color) => {
-      const clarifaiColors = color.outputs[0].data.colors.map(color => {
-        console.log('foundColor:\n', );
-        return color.raw_hex
-      })
+  findColor = (data) => {
+      const clarifaiColors = data.outputs[0].data.colors
+      console.log('data - Colors:\n', clarifaiColors)
 
       return clarifaiColors.map(color => {
         return {
-          hex: color,
+          colors: color,
       }
     });
     
@@ -101,8 +109,8 @@ class App extends Component {
     
   }
 
-  displayColor = (color) => {
-    this.setState({colors: color},
+  displayColor = (colorInput) => {
+    this.setState({colors: colorInput},
     () => console.log('Colors obj locally stored: \n', )
     );
   }
@@ -146,7 +154,7 @@ class App extends Component {
 
   onInputChange = (event) => {
     this.setState({input: event.target.value},
-    () => console.log(event.target.value)
+    () => console.log('Input value:\n', event.target.value)
     );
   };
 
@@ -206,13 +214,13 @@ class App extends Component {
         const len = response.outputs[0].data.colors.length;
         console.log("HTTP Response: \n", response);
         for (let i=0; i < len; i++) {
-          console.log('Fetched Colors obj:\n', response.outputs[0].data.colors[i].raw_hex);
+          console.log('Fetched Colors obj:\n', response.outputs[0].data);
           // color-detection
           // this.displayColor adding color hex to this.state.color
           // this.findColor(response) returns color hex
           this.displayColor(this.findColor(response));
         }
-
+        // .colors[i]
 
         // this.displayFaceBox() setState({box: box})
         // getting values returned by:
@@ -224,10 +232,8 @@ class App extends Component {
         // }
         })
         .catch((err) => console.log(err));
-
   };
   
-
   render() {
     // const { imageUrl } = this.state;
     {console.log('this.state.input: \n', this.state.input)};
@@ -236,10 +242,8 @@ class App extends Component {
     {console.log('this.state.celebrity: \n', this.state.celebrity)};
     {console.log('this.state.colors: \n', this.state.colors)};
     const { colors } = this.state;
-    const eachColor = colors.map(color => {
-      console.log('render() color.hex:\n', color.hex);
-      return color.hex;
-    });
+    const colors_array = colors.map(color => color)
+    {console.log('colors_array:\n', colors_array)}
 
     return (
       <div className="App">
@@ -250,16 +254,14 @@ class App extends Component {
           onCelebrityButton={this.onCelebrityButton}
           onColorButton={this.onColorButton}
         />
-        {/* <FaceRecognition 
+        <FaceRecognition 
           box={this.state.box} 
           imageUrl={this.state.imageUrl} 
           celebrityName={this.state.celebrity.name}
-        /> */}
+        />
         <ColorRecognition
           imageUrl={this.state.imageUrl}
-          color={
-            eachColor
-          }
+          color_props={colors_array}
         />
       </div>
     );
