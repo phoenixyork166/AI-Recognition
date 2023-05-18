@@ -13,7 +13,7 @@ const ImageLinkForm = ({
     <div className="center" id="container">
       <div id="paragraph">
         <p className="f3">
-          {"This Brain will detect faces in your pictures. \nGive it a try"}
+          {"This Brain will detect Colors or Celebrity faces in your pictures. Give it a try"}
         </p>
       </div>
 
