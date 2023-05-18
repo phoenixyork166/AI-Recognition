@@ -4,7 +4,8 @@ import "./App.css";
 import Navigation from "./components/Navigation/Navigation";
 import Logo from "./components/Logo/Logo";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
-import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
+// import FaceRecognition from "./components/AIRecognition/FaceRecognition/FaceRecognition";
+import ColorRecognition from "./components/AIRecognition/ColorRecognition/ColorRecognition";
 
 // const app = new Clarifai.App({
 //   apiKey: '910f3adce45b4519a33c50ab13e1efcb'
@@ -57,8 +58,14 @@ class App extends Component {
       box: {},
       celebrity: {},
       celebrityName: '',
+      colors: [],
     }
   }
+
+  // componentDidMount() {
+  //   // console.log('2 in componentDidMount() ');
+  //   this.findColor(this.state.color)
+  // }
 
   findCelebrity = (data) => {
     // We'd like to only get 1 celebrity at a time
@@ -73,11 +80,31 @@ class App extends Component {
 
   }
 
+  findColor = (color) => {
+      const clarifaiColors = color.outputs[0].data.colors.map(color => {
+        console.log('foundColor:\n', );
+        return color.raw_hex
+      })
+
+      return clarifaiColors.map(color => {
+        return {
+          hex: color,
+      }
+    });
+    
+  }
+
   displayCelebrity = (celebrity) => {
     this.setState({celebrity: celebrity},
     () => console.log('Celebrity object: \n', celebrity)
     );
     
+  }
+
+  displayColor = (color) => {
+    this.setState({colors: color},
+    () => console.log('Colors obj locally stored: \n', )
+    );
   }
 
   // Face-detection func
@@ -123,20 +150,12 @@ class App extends Component {
     );
   };
 
-  onButtonSubmit = () => {
+  onCelebrityButton = () => {
     // Whenever clicking Detect button
     // setState imageUrl: this.state.input from InputChange
     this.setState({imageUrl: this.state.input},
       () => console.log('this.state.input:\n', this.state.input));
-    console.log("click");
-
-  // On Button Click => run function(Face Detection)
-  // app.models.predict('Model ID', 'URL').then(...)
-
-  //   app.models.predict(Clarifai.COLOR_MODEL, this.state.input)
-  //     .then(response => console.log(response.json()))
-  //     .catch(err => console.log('Errors...', err));
-  // } 
+    console.log("click Celebrity");
 
   // fetch("https://api.clarifai.com/v2/models/general-image-recognition/outputs", returnClarifaiRequestOptions(imageUrl))
     fetch(
@@ -167,6 +186,46 @@ class App extends Component {
         .catch((err) => console.log(err));
 
   };
+
+  onColorButton = () => {
+    // Whenever clicking Detect button
+    // setState imageUrl: this.state.input from InputChange
+    this.setState({imageUrl: this.state.input},
+      () => console.log('this.state.input:\n', this.state.input));
+    console.log("click Color");
+
+    fetch(
+        "https://api.clarifai.com/v2/models/" +
+        "color-recognition" +
+        "/outputs",
+        returnClarifaiRequestOptions(this.state.input)
+      )
+
+        .then((response) => response.json())
+        .then((response) => {
+        const len = response.outputs[0].data.colors.length;
+        console.log("HTTP Response: \n", response);
+        for (let i=0; i < len; i++) {
+          console.log('Fetched Colors obj:\n', response.outputs[0].data.colors[i].raw_hex);
+          // color-detection
+          // this.displayColor adding color hex to this.state.color
+          // this.findColor(response) returns color hex
+          this.displayColor(this.findColor(response));
+        }
+
+
+        // this.displayFaceBox() setState({box: box})
+        // getting values returned by:
+        // this.calculateFaceLocation return {
+           // leftCol: clarifaiFace.left_col * width, 
+           // topRow: clarifaiFace.top_row * height, 
+           // rightCol: width - (clarifaiFace.right_col * width),
+           // bottomRow: height - (clarifaiFace.bottom_row * height)
+        // }
+        })
+        .catch((err) => console.log(err));
+
+  };
   
 
   render() {
@@ -175,18 +234,32 @@ class App extends Component {
     {console.log('this.state.imageUrl: \n', this.state.imageUrl)};
     {console.log('this.state.box: \n', this.state.box)};
     {console.log('this.state.celebrity: \n', this.state.celebrity)};
+    {console.log('this.state.colors: \n', this.state.colors)};
+    const { colors } = this.state;
+    const eachColor = colors.map(color => {
+      console.log('render() color.hex:\n', color.hex);
+      return color.hex;
+    });
+
     return (
       <div className="App">
         <Navigation />
         <Logo />
         <ImageLinkForm
           onInputChange={this.onInputChange}
-          onButtonSubmit={this.onButtonSubmit}
+          onCelebrityButton={this.onCelebrityButton}
+          onColorButton={this.onColorButton}
         />
-        <FaceRecognition 
+        {/* <FaceRecognition 
           box={this.state.box} 
           imageUrl={this.state.imageUrl} 
           celebrityName={this.state.celebrity.name}
+        /> */}
+        <ColorRecognition
+          imageUrl={this.state.imageUrl}
+          color={
+            eachColor
+          }
         />
       </div>
     );
