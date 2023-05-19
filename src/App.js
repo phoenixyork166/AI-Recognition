@@ -160,12 +160,21 @@ class App extends Component {
   };
 
   onCelebrityButton = () => {
+    const color_box = document.querySelector('#color-container > div.color-image > img')
+    const color_details = document.querySelector('#color-details');
+
+    if (this.state.face_hidden === true && this.state.color_hidden === false) {
+      color_box.remove();
+      color_details.remove();
+      this.setState({color_hidden: this.state.color_hidden = true});
+      this.setState({celebrity: this.state.colors = [] });
+    }
     // Whenever clicking Detect button
     // setState imageUrl: this.state.input from InputChange
     this.setState({imageUrl: this.state.input},
       () => console.log('this.state.input:\n', this.state.input));
 
-    this.setState({face_hidden: !this.state.face_hidden},
+    this.setState({face_hidden: false},
       () => console.log('this.state.face_hidden:\n', this.state.face_hidden));
 
   // fetch("https://api.clarifai.com/v2/models/general-image-recognition/outputs", returnClarifaiRequestOptions(imageUrl))
@@ -199,12 +208,22 @@ class App extends Component {
   };
 
   onColorButton = () => {
+    const celebrity_detection = document.querySelector('#face-image')
+    const celebrity_name = document.querySelector('#root > div > div.center.ma > div > div.bounding-box > h3')
+    
+    if (this.state.color_hidden === true && this.state.face_hidden === false) {
+      celebrity_detection.remove();
+      celebrity_name.remove();
+      this.setState({face_hidden: this.state.face_hidden = true});
+      this.setState({celebrity: this.state.celebrity = {} });
+    }
+    
     // Whenever clicking Detect button
     // setState imageUrl: this.state.input from InputChange
     this.setState({imageUrl: this.state.input},
       () => console.log('this.state.input:\n', this.state.input));
     
-    this.setState({color_hidden: !this.state.color_hidden},
+    this.setState({color_hidden: false},
       () => console.log('this.state.color_hidden:\n', this.state.color_hidden));
 
     fetch(
@@ -237,6 +256,7 @@ class App extends Component {
         // }
         })
         .catch((err) => console.log(err));
+        
   };
   
   render() {
