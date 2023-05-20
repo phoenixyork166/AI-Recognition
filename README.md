@@ -1,4 +1,18 @@
-# Getting Started with Create React App
+# Hi, this is my Smart Brain written based on instructions from my Udemy ZTM Web developer bootcamp instructor: Andrei Neagoie using Clarifai API 
+## Learn More
+# Clarifai API https://clarifai.com/explore/models?searchQuery=face-detection
+# Clarifai documentation https://docs.clarifai.com/
+
+# To download this React app:
+git clone https://github.com/phoenixyork166/AI-Recognition.git
+
+# To install dependencies:
+npm install
+
+# To run this app locally:
+npm start
+
+Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
