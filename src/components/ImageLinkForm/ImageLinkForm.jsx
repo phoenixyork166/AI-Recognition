@@ -5,9 +5,11 @@ import "./ImageLinkForm.css";
 const ImageLinkForm = ({ 
   onInputChange, 
   onCelebrityButton, 
+  celebrity_active,
   onColorButton,
-  face_hidden,
-  color_hidden,
+  color_active,
+  onAgeButton,
+  age_active,
 }) => {
   return (
     <div className="center" id="container">
@@ -30,14 +32,23 @@ const ImageLinkForm = ({
           <button
             className="w-30 grow f4 link ph3 pv2 dib white bg-light-purple"
             onClick={onCelebrityButton}
+            disabled={celebrity_active}
           >
             Detect Celebrity
           </button>
           <button
             className="w-30 grow f4 link ph3 pv2 dib white bg-light-purple"
             onClick={onColorButton}
+            disabled={color_active}
           >
             Detect Color
+          </button>
+          <button
+            className="w-30 grow f4 link ph3 pv2 dib white bg-light-purple"
+            onClick={onAgeButton}
+            disabled={age_active}
+          >
+            Detect Age
           </button>
         </div>
       </div>

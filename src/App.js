@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import "./App.css";
-// import Clarifai from "clarifai";
 import Navigation from "./components/Navigation/Navigation";
 import Logo from "./components/Logo/Logo";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import FaceRecognition from "./components/AIRecognition/FaceRecognition/FaceRecognition";
 import ColorRecognition from "./components/AIRecognition/ColorRecognition/ColorRecognition";
+import AgeRecognition from "./components/AIRecognition/AgeRecognition/AgeRecognition";
 
 // const app = new Clarifai.App({
 //   apiKey: '910f3adce45b4519a33c50ab13e1efcb'
@@ -59,26 +59,20 @@ class App extends Component {
       celebrity: {},
       celebrityName: '',
       colors: [],
+      age: [],
       face_hidden: true,
       color_hidden: true,
+      age_hidden: true,
       responseStatusCode: Number(''),
+      disabled: {
+        celebrity_active: null,
+        color_active: null,
+        age_active: null,
+        }
     }
   }
 
-  // componentDidMount() {
-  //   // console.log('2 in componentDidMount() ');
-  //   this.findColor(this.state.color)
-  // }
-
-  validateImage = (event) => {
-    const const_true = 'true';
-    
-    const fetch_test = window.fetch(event.target.value);
-    console.log('validateImage Input value:\n', event.target.value);
-    console.log('fetch test:', fetch_test);
-    // return const_true;
-  }
-
+  // For Celebrity detection model
   findCelebrity = (data) => {
     // We'd like to only get 1 celebrity at a time
     const clarifaiCelebrity = data.outputs[0].data.regions[0].data.concepts[0];
@@ -92,6 +86,7 @@ class App extends Component {
 
   }
 
+  // For Color detection model
   findColor = (data) => {
       const clarifaiColors = data.outputs[0].data.colors
       console.log('data - Colors:\n', clarifaiColors)
@@ -99,11 +94,24 @@ class App extends Component {
       return clarifaiColors.map(color => {
         return {
           colors: color,
+        }
+      });
+    }
+
+  // For Age detection model
+  findAge = (data) => {
+    const clarifaiAges = data.outputs[0].data.concepts
+    console.log('findAge(data) - Ages:\n', clarifaiAges)
+
+    return clarifaiAges.map(each_age => {
+      return {
+        age: each_age,
       }
     });
-    
+  
   }
 
+  // For Celebrity detection model
   displayCelebrity = (celebrity) => {
     this.setState({celebrity: celebrity},
     () => console.log('Celebrity object: \n', celebrity)
@@ -111,9 +119,17 @@ class App extends Component {
     
   }
 
+  // For Color detection model
   displayColor = (colorInput) => {
     this.setState({colors: colorInput},
-    () => console.log('Colors obj locally stored: \n', )
+    () => console.log('Colors obj locally stored: \n', colorInput)
+    );
+  }
+
+  // For Age detection model
+  displayAge = (ageInput) => {
+    this.setState({age: ageInput},
+    () => console.log('Age group objs locally stored: \n', ageInput)
     );
   }
 
@@ -160,21 +176,52 @@ class App extends Component {
     );
   };
 
-  onCelebrityButton = () => {
+  validateState = () => {
+    const celebrity_detection = document.querySelector('#face-image');
+    const celebrity_name = document.querySelector('#root > div > div.center.ma > div > div.bounding-box > h3');
     const color_box = document.querySelector('#color-container > div.color-image > img')
-    const color_details = document.querySelector('#color-details');    
-    const celebrity_name = document.querySelector('#root > div > div.center.ma > div > div.bounding-box > h3')
+    const color_details = document.querySelector('#color-details');
+    const age_detection = document.querySelector('#face-image')
+    const age_number = document.querySelector('#age-number > h3')
 
-    if (this.state.face_hidden === true && this.state.color_hidden === false) {
-      color_box.remove();
-      color_details.remove();
-      this.setState({color_hidden: this.state.color_hidden = true});
-      this.setState({celebrity: this.state.colors = [] });
-    } 
+    // When Face detection is in place
+    if (this.state.face_hidden === false && this.state.color_hidden === true && this.state.age_hidden === true) {
+      celebrity_detection.style.display = 'none'
+      celebrity_name.style.display = 'none'
+      this.setState({face_hidden: this.state.face_hidden = true})
+      this.setState({celebrity: this.state.celebrity = {} })
+
+    // When Color detection is in place
+    } else if (this.state.face_hidden === true && this.state.color_hidden === false && this.state.age_hidden === true) {
+      color_box.style.display = 'none'
+      color_details.style.display = 'none'
+      this.setState({color_hidden: this.state.color_hidden = true})
+      this.setState({colors: this.state.colors = [] })
+
+    // When Age detection is in place
+    } else if (this.state.face_hidden === true && this.state.color_hidden === true && this.state.age_hidden === false) {
+      age_detection.style.display = 'none'
+      age_number.style.display = 'none'
+      this.setState({age_hidden: this.state.age_hidden = true})
+      this.setState({age: this.state.age = [] })
+
+    }
+
+  
+  }
+
+  onCelebrityButton = () => {
+    this.validateState()
     // Whenever clicking Detect button
     // setState imageUrl: this.state.input from InputChange
     this.setState({imageUrl: this.state.input},
       () => console.log('this.state.input:\n', this.state.input));
+
+
+    // Disable Detect Celebrity button when Celebrity Detection is Active
+    this.setState({celebrity_active: this.state.disabled.celebrity_active = true})
+    this.setState({color_active: this.state.disabled.celebrity_active = false})
+    this.setState({age_active: this.state.disabled.age_active = false})
 
     this.setState({face_hidden: false},
       () => console.log('this.state.face_hidden:\n', this.state.face_hidden));
@@ -217,21 +264,18 @@ class App extends Component {
   };
 
   onColorButton = () => {
-    const celebrity_detection = document.querySelector('#face-image')
-    const celebrity_name = document.querySelector('#root > div > div.center.ma > div > div.bounding-box > h3')
-    
-    if (this.state.color_hidden === true && this.state.face_hidden === false) {
-      celebrity_detection.remove();
-      celebrity_name.remove();
-      this.setState({face_hidden: this.state.face_hidden = true});
-      this.setState({celebrity: this.state.celebrity = {} });
-    }
+   this.validateState()
     
     // Whenever clicking Detect button
     // setState imageUrl: this.state.input from InputChange
     this.setState({imageUrl: this.state.input},
       () => console.log('this.state.input:\n', this.state.input));
     
+    // Disable Detect Color button when Color Detection is Active
+    this.setState({celebrity_active: this.state.disabled.celebrity_active = false})
+    this.setState({color_active: this.state.disabled.celebrity_active = true})
+    this.setState({age_active: this.state.disabled.age_active = false})
+
     this.setState({color_hidden: false},
       () => console.log('this.state.color_hidden:\n', this.state.color_hidden));
 
@@ -249,6 +293,7 @@ class App extends Component {
         .then((response) => {
         const len = response.outputs[0].data.colors.length;
         console.log("HTTP Response: \n", response);
+        console.log("HTTP request status code:\n", response.status.code);
         for (let i=0; i < len; i++) {
           console.log('Fetched Colors obj:\n', response.outputs[0].data);
           // color-detection
@@ -260,6 +305,48 @@ class App extends Component {
         .catch((err) => console.log(err));
         
   };
+
+  onAgeButton = () => {
+    this.validateState()
+    
+    // Whenever clicking Detect button
+    // setState imageUrl: this.state.input from InputChange
+    this.setState({imageUrl: this.state.input},
+      () => console.log('this.state.input:\n', this.state.input));
+    
+    // Disable Detect Age button when Age Detection is Active
+    this.setState({celebrity_active: this.state.disabled.celebrity_active = false})
+    this.setState({color_active: this.state.disabled.celebrity_active = false})
+    this.setState({age_active: this.state.disabled.age_active = true})
+
+    this.setState({age_hidden: false},
+      () => console.log('this.state.age_hidden:\n', this.state.age_hidden));
+
+    // Clearing out this.state.colors before future fetching
+    this.setState({age: this.state.age = [] });
+
+    fetch(
+        "https://api.clarifai.com/v2/models/" +
+        "age-demographics-recognition" +
+        "/outputs",
+        returnClarifaiRequestOptions(this.state.input)
+      )
+
+        .then((response) => response.json())
+        .then((response) => {
+          const len = response.outputs[0].data.concepts.length;
+          console.log("HTTP Response\nAge Detection", response);
+          console.log("HTTP request status code:\n", response.status.code);
+            console.log('Fetched Age grp obj:\n', response.outputs[0].data.concepts);
+            // color-detection
+            // this.displayColor adding color hex to this.state.color
+            // this.findColor(response) returns color hex
+            this.displayAge(this.findAge(response));
+          
+          })
+          .catch((err) => console.log(err));
+        
+  };
   
   render() {
     // const { imageUrl } = this.state;
@@ -269,12 +356,16 @@ class App extends Component {
     {console.log('this.state.box: \n', this.state.box)};
     {console.log('this.state.celebrity: \n', this.state.celebrity)};
     {console.log('this.state.colors: \n', this.state.colors)};
+    {console.log('this.state.age: \n', this.state.age)};
     {console.log('this.state.face_hidden', this.state.face_hidden)};
     {console.log('this.state.color_hidden', this.state.color_hidden)};
+    {console.log('this.state.age_hidden', this.state.age_hidden)};
     {console.log('this.state.responseStatusCode:\n', this.state.responseStatusCode)};
 
-    const { colors } = this.state;
+    const { age, colors } = this.state;
     const colors_array = colors.map(color => color)
+    const age_props = age.map((each, i) => each.age.name)[0]
+    console.log('age_props\n', age_props);
 
     return (
       <div className="App">
@@ -283,9 +374,14 @@ class App extends Component {
         <ImageLinkForm
           onInputChange={this.onInputChange}
           onCelebrityButton={this.onCelebrityButton}
+          celebrity_active={this.state.celebrity_active}
           onColorButton={this.onColorButton}
+          color_active={this.state.color_active}
+          onAgeButton={this.onAgeButton}
+          age_active={this.state.age_active}
           face_hidden={this.state.face_hidden}
           color_hidden={this.state.color_hidden}
+          age_hidden={this.state.age_hidden}
         />
         <FaceRecognition 
           box={this.state.box} 
@@ -297,6 +393,11 @@ class App extends Component {
           imageUrl={this.state.imageUrl}
           color_props={colors_array}
           color_hidden={this.state.color_hidden}
+        />
+        <AgeRecognition
+          age={age_props}
+          imageUrl={this.state.imageUrl}
+          age_hidden={this.state.age_hidden}
         />
       </div>
     );

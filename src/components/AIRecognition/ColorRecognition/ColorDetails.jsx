@@ -1,5 +1,4 @@
 import "./ColorDetails.css";
-// import Clipboard from '../../Clipboard/Clipboard';
 
 const ColorDetails = ({ color_props }) => {
   const hex = color_props.map((each) => {
