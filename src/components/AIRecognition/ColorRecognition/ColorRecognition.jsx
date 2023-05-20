@@ -10,7 +10,7 @@ const ColorRecognition = ( { imageUrl, color_props, color_hidden } ) => {
                 <div className='color-image'> 
                     <img 
                         src={imageUrl}
-                        alt="Color Image will be displayed"
+                        alt="Ooops...It seems the entered URL is BROKEN...Please enter a working URL starting with 'https' in .jpg format"
                     />
                 </div>
 

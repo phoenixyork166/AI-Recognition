@@ -61,6 +61,7 @@ class App extends Component {
       colors: [],
       face_hidden: true,
       color_hidden: true,
+      responseStatusCode: Number(''),
     }
   }
 
@@ -161,14 +162,15 @@ class App extends Component {
 
   onCelebrityButton = () => {
     const color_box = document.querySelector('#color-container > div.color-image > img')
-    const color_details = document.querySelector('#color-details');
+    const color_details = document.querySelector('#color-details');    
+    const celebrity_name = document.querySelector('#root > div > div.center.ma > div > div.bounding-box > h3')
 
     if (this.state.face_hidden === true && this.state.color_hidden === false) {
       color_box.remove();
       color_details.remove();
       this.setState({color_hidden: this.state.color_hidden = true});
       this.setState({celebrity: this.state.colors = [] });
-    }
+    } 
     // Whenever clicking Detect button
     // setState imageUrl: this.state.input from InputChange
     this.setState({imageUrl: this.state.input},
@@ -176,6 +178,9 @@ class App extends Component {
 
     this.setState({face_hidden: false},
       () => console.log('this.state.face_hidden:\n', this.state.face_hidden));
+
+    // Clearing out this.state.celebrity before future fetching
+    this.setState({celebrity: this.state.celebrity = {} });
 
   // fetch("https://api.clarifai.com/v2/models/general-image-recognition/outputs", returnClarifaiRequestOptions(imageUrl))
     fetch(
@@ -188,12 +193,15 @@ class App extends Component {
         .then((response) => response.json())
         .then((response) => {
         console.log("HTTP Response: \n", response);
+        console.log("HTTP request status code:\n", response.status.code);
         console.log('bounding box', response.outputs[0].data.regions[0].region_info.bounding_box)
         console.log('Celebrity obj:\n', response.outputs[0].data.regions[0].data.concepts[0]);
         // Face-detection model
         this.displayFaceBox(this.calculateFaceLocation(response));
         // Celebrity-face-detection
         this.displayCelebrity(this.findCelebrity(response));
+        // Store HTTP response status code
+        this.setState({responseStatusCode: response.status.code});
         // this.displayFaceBox() setState({box: box})
         // getting values returned by:
         // this.calculateFaceLocation return {
@@ -204,6 +212,7 @@ class App extends Component {
         // }
         })
         .catch((err) => console.log(err));
+
 
   };
 
@@ -226,6 +235,9 @@ class App extends Component {
     this.setState({color_hidden: false},
       () => console.log('this.state.color_hidden:\n', this.state.color_hidden));
 
+    // Clearing out this.state.colors before future fetching
+    this.setState({colors: this.state.colors = [] });
+
     fetch(
         "https://api.clarifai.com/v2/models/" +
         "color-recognition" +
@@ -244,16 +256,6 @@ class App extends Component {
           // this.findColor(response) returns color hex
           this.displayColor(this.findColor(response));
         }
-        // .colors[i]
-
-        // this.displayFaceBox() setState({box: box})
-        // getting values returned by:
-        // this.calculateFaceLocation return {
-           // leftCol: clarifaiFace.left_col * width, 
-           // topRow: clarifaiFace.top_row * height, 
-           // rightCol: width - (clarifaiFace.right_col * width),
-           // bottomRow: height - (clarifaiFace.bottom_row * height)
-        // }
         })
         .catch((err) => console.log(err));
         
@@ -261,6 +263,7 @@ class App extends Component {
   
   render() {
     // const { imageUrl } = this.state;
+    
     {console.log('this.state.input: \n', this.state.input)};
     {console.log('this.state.imageUrl: \n', this.state.imageUrl)};
     {console.log('this.state.box: \n', this.state.box)};
@@ -268,6 +271,8 @@ class App extends Component {
     {console.log('this.state.colors: \n', this.state.colors)};
     {console.log('this.state.face_hidden', this.state.face_hidden)};
     {console.log('this.state.color_hidden', this.state.color_hidden)};
+    {console.log('this.state.responseStatusCode:\n', this.state.responseStatusCode)};
+
     const { colors } = this.state;
     const colors_array = colors.map(color => color)
 

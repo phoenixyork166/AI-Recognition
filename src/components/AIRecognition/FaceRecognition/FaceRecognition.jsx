@@ -15,7 +15,7 @@ const FaceRecognition = ( { imageUrl, box, celebrityName, face_hidden } ) => {
                     // cannot be edited
                     id='face-image'
                     src={imageUrl}
-                    alt="Image will be displayed"
+                    alt="Ooops...It seems the entered URL is BROKEN...Please enter a working URL starting with 'https' in .jpg format"
                     // style={{
                     //     visibility: 'hidden'
                     // }}

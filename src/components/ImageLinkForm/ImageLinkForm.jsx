@@ -22,7 +22,7 @@ const ImageLinkForm = ({
           <input
             className="f4 pa2 w-70 center"
             id="input-inner"
-            type="text"
+            type="url"
             onChange={onInputChange}
           />
         </div>
