@@ -177,10 +177,10 @@ class App extends Component {
   };
 
   validateState = () => {
-    const celebrity_detection = document.querySelector('#face-image');
+    const celebrity_detection = document.querySelector('#face-image')
     const celebrity_name = document.querySelector('#root > div > div.center.ma > div > div.bounding-box > h3');
     const color_box = document.querySelector('#color-container > div.color-image > img')
-    const color_details = document.querySelector('#color-details');
+    const color_details = document.querySelector('#color-details')
     const age_detection = document.querySelector('#face-image')
     const age_number = document.querySelector('#age-number > h3')
 
