@@ -31,7 +31,14 @@ const FaceRecognition = ( { imageUrl, box, celebrityName, face_hidden } ) => {
                    left: box.leftCol,
                     }}
                 >
-                  <h3 className="celebrity-name">{celebrityName}</h3>
+                <div className='celebrity-name-outer'>
+                    <button 
+                     className='celebrity-name'
+                     onClick={() => window.location.href = `https://www.google.com/search?q=${celebrityName}`}
+                    >
+                    {celebrityName}
+                    </button>
+                </div>
                 </div>
             </div>
             

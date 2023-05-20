@@ -13,10 +13,15 @@
     cursor: pointer;
 }
 
-.celebrity-name {
-    color: #c5e60c;
-    margin-top: -5vh;
-    font-size: 20px;
+.celebrity-name-outer {
     display: flex;
+}
+
+.celebrity-name {
+    color: #1738f1;
+    margin-top: -5vh;
+    width: 25vw;
+    height: 4vh;
+    font-size: 2rem;
 }
 
