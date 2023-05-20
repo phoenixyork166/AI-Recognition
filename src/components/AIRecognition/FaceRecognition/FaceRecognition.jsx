@@ -31,10 +31,14 @@ const FaceRecognition = ( { imageUrl, box, celebrityName, face_hidden } ) => {
                    left: box.leftCol,
                     }}
                 >
+                {/* Create a button to show Celebrity name && 
+                allow users to google search it for comparison 
+                on a new browser window*/}
                 <div className='celebrity-name-outer'>
                     <button 
                      className='celebrity-name'
-                     onClick={() => window.location.href = `https://www.google.com/search?q=${celebrityName}`}
+                     onClick={() => 
+                        window.open(`https://www.google.com/search?q=${celebrityName}`, '_blank')}
                     >
                     {celebrityName}
                     </button>
